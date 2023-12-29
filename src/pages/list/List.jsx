@@ -8,6 +8,7 @@ import { DateRange } from 'react-date-range';
 import SearchItem from '../../components/searchItem/SearchItem';
 import Footer from '../../components/footer/Footer';
 import '../../components/footer/footer.css';
+import SubWidget from '../../components/subWidget/SubWidget';
 
 const List = () => {
   const location = useLocation();
@@ -100,6 +101,7 @@ const List = () => {
           </div>
         </div>
       </div>
+      <SubWidget />
       <Footer />
     </div>
   );
