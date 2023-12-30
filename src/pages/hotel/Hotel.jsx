@@ -2,16 +2,19 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Header from '../../components/header/Header';
 import Navbar from '../../components/navbar/Navbar';
 import './hotel.css';
-import { faLocationDot } from '@fortawesome/free-solid-svg-icons';
+import {
+  faChevronLeft,
+  faChevronRight,
+  faCircleXmark,
+  faLocationDot,
+} from '@fortawesome/free-solid-svg-icons';
 import SubWidget from '../../components/subWidget/SubWidget';
 import Footer from '../../components/footer/Footer';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import SwiperCore from 'swiper';
-import { Navigation } from 'swiper/modules';
-import 'swiper/css/bundle';
+import { useState } from 'react';
 
 const Hotel = () => {
-  SwiperCore.use([Navigation]);
+  const [slideNumber, setSlideNumber] = useState(0);
+  const [open, setOpen] = useState(false);
 
   const photos = [
     {
@@ -36,12 +39,51 @@ const Hotel = () => {
       src: 'https://cf.bstatic.com/xdata/images/hotel/max1024x768/13255538.jpg?k=6f342b222b76a0c42518e39a6f25dbe7fb3580aaf75a8b572a572bebe74077fe&o=&hp=1',
     },
   ];
+
+  const handleOpen = (index) => {
+    setSlideNumber(index);
+    setOpen(true);
+  };
+
+  const handleMove = (direction) => {
+    let newSlideNumber;
+
+    if (direction === 'left') {
+      newSlideNumber = slideNumber === 0 ? 5 : slideNumber - 1;
+    } else {
+      newSlideNumber = slideNumber === 5 ? 0 : slideNumber + 1;
+    }
+
+    setSlideNumber(newSlideNumber);
+  };
+
   return (
     <div>
       <Navbar />
       <Header type='list' />
       <div className='hotelContainer'>
-        <div className='slider'></div>
+        {open && (
+          <div className='slider'>
+            <FontAwesomeIcon
+              icon={faCircleXmark}
+              className='close'
+              onClick={() => setOpen(false)}
+            />
+            <FontAwesomeIcon
+              icon={faChevronLeft}
+              className='arrow'
+              onClick={() => handleMove('left')}
+            />
+            <div className='sliderWrapper'>
+              <img src={photos[slideNumber].src} className='sliderImg' />
+            </div>
+            <FontAwesomeIcon
+              icon={faChevronRight}
+              className='arrow'
+              onClick={() => handleMove('right')}
+            />
+          </div>
+        )}
         <div className='hotelWrapper'>
           <button className='bookNow'>Reserve or Book now!</button>
           <h1 className='hotelTitle'>Grand Hotel</h1>
@@ -57,15 +99,15 @@ const Hotel = () => {
             taxi
           </span>
           <div className='hotelImages'>
-            <Swiper navigation>
-              {photos.map((photo) => (
-                <SwiperSlide>
-                  <div className='hotelImgWrapper'>
-                    <img src={photo.src} alt='' className='hotelImg' />
-                  </div>
-                </SwiperSlide>
-              ))}
-            </Swiper>
+            {photos.map((photo, index) => (
+              <div className='hotelImgWrapper'>
+                <img
+                  src={photo.src}
+                  onClick={() => handleOpen(index)}
+                  className='hotelImg'
+                />
+              </div>
+            ))}
           </div>
           <div className='hotelDetails'>
             <div className='hotelDetailsTexts'>
