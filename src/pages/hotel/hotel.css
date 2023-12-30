@@ -54,18 +54,22 @@
 
 .hotelImages {
   display: flex;
-  flex-wrap: wrap;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .hotelImgWrapper {
-  width: 33%;
+  width: 32%;
 }
 
 .hotelImg {
   width: 100%;
   object-fit: cover;
   cursor: pointer;
+  aspect-ratio: 1/1;
+  overflow: hidden;
+  border-radius: 5px;
 }
 
 .hotelDetails {
@@ -152,6 +156,11 @@
   font-size: 50px;
   color: lightgray;
   cursor: pointer;
+  transition: 0.75ms ease;
+}
+
+.close:hover {
+  color: #0071c2;
 }
 
 .arrow {
@@ -159,4 +168,9 @@
   font-size: 50px;
   color: lightgray;
   cursor: pointer;
+  transition: 0.75ms ease;
+}
+
+.arrow:hover {
+  color: #0071c2;
 }
