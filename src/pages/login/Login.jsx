@@ -2,6 +2,7 @@ import { useContext, useState } from 'react';
 import './login.css';
 import { AuthContext } from '../../context/AuthContext';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const [creds, setCreds] = useState({
@@ -9,7 +10,9 @@ const Login = () => {
     password: undefined,
   });
 
-  const { user, loading, error, dispatch } = useContext(AuthContext);
+  const { loading, error, dispatch } = useContext(AuthContext);
+
+  const navigate = useNavigate();
 
   const handleChange = (ev) => {
     setCreds((prev) => ({ ...prev, [ev.target.id]: ev.target.value }));
@@ -21,12 +24,11 @@ const Login = () => {
     try {
       const res = await axios.post('/api/auth/login', creds);
       dispatch({ type: 'LOGIN_SUCCESS', payload: res.data });
+      navigate('/');
     } catch (err) {
-      dispatch({ type: 'LOGIN_FAILED', payload: err.resonse.data });
+      dispatch({ type: 'LOGIN_FAILED', payload: err.response.data });
     }
   };
-
-  console.log(user);
 
   return (
     <div className='login'>
@@ -45,7 +47,11 @@ const Login = () => {
           placeholder='Password'
           className='loginInput'
         />
-        <button onClick={handleLogin} className='loginButton'>
+        <button
+          disabled={loading}
+          onClick={handleLogin}
+          className='loginButton'
+        >
           Login
         </button>
         {error && <span>{error.message}</span>}

@@ -12,16 +12,21 @@ import SubWidget from '../../components/subWidget/SubWidget';
 import Footer from '../../components/footer/Footer';
 import { useContext, useState } from 'react';
 import useFetch from '../../hooks/useFetch';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { SearchContext } from '../../context/SearchContext';
+import { AuthContext } from '../../context/AuthContext';
+import ReserveModal from '../../components/reserveModal/ReserveModal';
 
 const Hotel = () => {
   const location = useLocation();
   const id = location.pathname.split('/')[2];
   const [slideNumber, setSlideNumber] = useState(0);
   const [open, setOpen] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
 
-  const { data, loading, error, reFetch } = useFetch(`/api/hotels/find/${id}`);
+  const { data, loading, error } = useFetch(`/api/hotels/find/${id}`);
+  const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const { dates, options } = useContext(SearchContext);
 
@@ -49,6 +54,14 @@ const Hotel = () => {
     }
 
     setSlideNumber(newSlideNumber);
+  };
+
+  const handleReserve = () => {
+    if (user) {
+      setOpenModal(true);
+    } else {
+      navigate('/login');
+    }
   };
 
   return (
@@ -121,7 +134,7 @@ const Hotel = () => {
                   <b>£{days * data.cheapestPrice * options.room}</b> ({days}{' '}
                   nights)
                 </h2>
-                <button>Reserve or Book now!</button>
+                <button onClick={handleReserve}>Reserve or Book now!</button>
               </div>
             </div>
           </div>
@@ -129,6 +142,7 @@ const Hotel = () => {
           <Footer />
         </div>
       )}
+      {openModal && <ReserveModal setOpen={setOpenModal} hotelId={id} />}
     </div>
   );
 };
