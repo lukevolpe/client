@@ -4,6 +4,8 @@ import { faCircleXmark } from '@fortawesome/free-solid-svg-icons';
 import useFetch from '../../hooks/useFetch';
 import { useContext, useState } from 'react';
 import { SearchContext } from '../../context/SearchContext';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const ReserveModal = ({ setOpen, hotelId }) => {
   const [selectedRooms, setSelectedRooms] = useState([]);
@@ -43,7 +45,22 @@ const ReserveModal = ({ setOpen, hotelId }) => {
     );
   };
 
-  const handleClick = () => {};
+  const navigate = useNavigate();
+
+  const handleClick = async () => {
+    try {
+      await Promise.all(
+        selectedRooms.map((roomId) => {
+          const res = axios.put(`/api/rooms/availability/${roomId}`, {
+            dates: allDates,
+          });
+          return res.data;
+        })
+      );
+      setOpen(false);
+      navigate('/');
+    } catch (error) {}
+  };
 
   return (
     <div className='reserve'>
@@ -64,17 +81,19 @@ const ReserveModal = ({ setOpen, hotelId }) => {
               </div>
               <div className='rPrice'>£{item.price}</div>
             </div>
-            {item.roomNumbers.map((roomNumber) => (
-              <div className='room'>
-                <label>{roomNumber.number}</label>
-                <input
-                  type='checkbox'
-                  value={roomNumber._id}
-                  onChange={handleSelect}
-                  disabled={!isAvailable(roomNumber)}
-                />
-              </div>
-            ))}
+            <div className='rSelectRooms'>
+              {item.roomNumbers.map((roomNumber) => (
+                <div className='room'>
+                  <label>{roomNumber.number}</label>
+                  <input
+                    type='checkbox'
+                    value={roomNumber._id}
+                    onChange={handleSelect}
+                    disabled={!isAvailable(roomNumber)}
+                  />
+                </div>
+              ))}
+            </div>
           </div>
         ))}
         <button onClick={handleClick} className='rButton'>

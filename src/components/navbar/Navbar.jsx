@@ -13,7 +13,7 @@ const Navbar = () => {
           Booking.com
         </Link>
         {user ? (
-          user.username
+          <span>Welcome, {user.username}</span>
         ) : (
           <div className='navItems'>
             <button className='navButton'>Register</button>
