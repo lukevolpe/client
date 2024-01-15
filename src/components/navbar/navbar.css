@@ -31,3 +31,13 @@
   cursor: pointer;
   color: #003580;
 }
+
+.adminLink {
+  text-decoration: none;
+  color: #fff;
+  font-style: italic;
+}
+
+.adminLink:hover {
+  opacity: 75%;
+}
